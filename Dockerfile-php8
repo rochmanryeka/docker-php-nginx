@@ -1,0 +1,11 @@
+FROM php:8.0-fpm
+
+WORKDIR /var/www/html
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    # Add any additional dependencies you need
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy application files
+COPY . /var/www/html
