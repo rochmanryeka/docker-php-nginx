@@ -2,10 +2,36 @@ FROM php:7.3-fpm
 
 WORKDIR /var/www/html
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    # Add any additional dependencies you need
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        make \
+        autoconf \
+        libc-dev \
+        pkg-config \
+        zlib1g-dev \
+        libcurl4-openssl-dev \
+        libjson-c-dev \
+        libssl-dev \
+        libz-dev \
+        libxml2-dev \
+        libzip-dev \
+    # Install Opcache
+    && docker-php-ext-install opcache \
+    && docker-php-ext-enable opcache \
+    # Install Xdebug
+    && pecl install xdebug-3.1.5 \
+    && docker-php-ext-enable xdebug \
+    # Clean up
     && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-install opcache curl \
+    json session pdo pdo_mysql tokenizer dom zip \
+    xml mbstring
+
+# PHP Config .ini
+COPY ./config/opcache.ini /etc/php7/conf.d/00_opcache.ini
+COPY ./config/xdebug.ini /etc/php7/conf.d/xdebug.ini
 
 # Copy application files
 COPY . /var/www/html

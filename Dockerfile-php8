@@ -2,10 +2,32 @@ FROM php:8.0-fpm
 
 WORKDIR /var/www/html
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    # Add any additional dependencies you need
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        make \
+        autoconf \
+        libc-dev \
+        pkg-config \
+        zlib1g-dev \
+        libcurl4-openssl-dev \
+        libjson-c-dev \
+        libssl-dev \
+        libz-dev \
+        libxml2-dev \
+        libzip-dev \
+    # Install Opcache
+    && docker-php-ext-install opcache \
+    && docker-php-ext-enable opcache \
+    # Install Xdebug
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    # Clean up
     && rm -rf /var/lib/apt/lists/*
+
+# PHP Config .ini
+COPY ./config/opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+COPY ./config/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Copy application files
 COPY . /var/www/html
