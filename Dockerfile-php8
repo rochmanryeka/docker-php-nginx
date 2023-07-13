@@ -25,6 +25,10 @@ RUN apt-get update && \
     # Clean up
     && rm -rf /var/lib/apt/lists/*
 
+RUN docker-php-ext-install curl \
+    session pdo pdo_mysql tokenizer dom zip \
+    xml
+
 # PHP Config .ini
 COPY ./config/opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 COPY ./config/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
