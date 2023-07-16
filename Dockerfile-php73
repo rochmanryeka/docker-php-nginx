@@ -30,8 +30,8 @@ RUN docker-php-ext-install opcache curl \
     xml mbstring
 
 # PHP Config .ini
-COPY ./config/opcache.ini /etc/php7/conf.d/00_opcache.ini
-COPY ./config/xdebug.ini /etc/php7/conf.d/xdebug.ini
+COPY ./config/opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+COPY ./config/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Copy application files
 COPY . /var/www/html
