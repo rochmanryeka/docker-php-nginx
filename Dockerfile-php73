@@ -1,7 +1,12 @@
 FROM php:7.3-fpm
 
+# Set working directory
 WORKDIR /var/www/html
 
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         gcc \
@@ -16,18 +21,23 @@ RUN apt-get update && \
         libz-dev \
         libxml2-dev \
         libzip-dev \
-    # Install Opcache
-    && docker-php-ext-install opcache \
+        libpng-dev \
+        libjpeg-dev
+
+# Install Opcache
+RUN docker-php-ext-install opcache \
     && docker-php-ext-enable opcache \
     # Install Xdebug
     && pecl install xdebug-3.1.5 \
     && docker-php-ext-enable xdebug \
-    # Clean up
-    && rm -rf /var/lib/apt/lists/*
-
-RUN docker-php-ext-install opcache curl \
+    # Install other extensions
+    && docker-php-ext-install curl \
     json session pdo pdo_mysql tokenizer dom zip \
     xml mbstring
+
+# Install GD
+RUN docker-php-ext-configure gd \
+    && docker-php-ext-install gd
 
 # PHP Config .ini
 COPY ./config/opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
