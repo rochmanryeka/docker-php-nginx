@@ -1,5 +1,12 @@
 version: '3'
 
+networks:
+  my_network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1
+
 services:
   nginx:
     image: nginx:latest
@@ -11,6 +18,9 @@ services:
     depends_on:
       - php73
       - php8
+    networks:
+      my_network:
+        ipv4_address: 172.18.0.2
 
   php73:
     build:
@@ -18,6 +28,16 @@ services:
       dockerfile: Dockerfile-php73
     volumes:
       - ../:/var/www/html
+    extra_hosts:
+      - "localhost.lc:172.18.0.2"
+      - "talentics-app.lc:172.18.0.2"
+      - "talentics-console.lc:172.18.0.2"
+      - "talentics-core.lc:172.18.0.2"
+      - "talentics-site.lc:172.18.0.2"
+      - "talentics-jobs.lc:172.18.0.2"
+    networks:
+      my_network:
+        ipv4_address: 172.18.0.3
 
   php8:
     build:
@@ -25,3 +45,13 @@ services:
       dockerfile: Dockerfile-php8
     volumes:
       - ../:/var/www/html
+    extra_hosts:
+      - "localhost.lc:172.18.0.2"
+      - "talentics-app.lc:172.18.0.2"
+      - "talentics-console.lc:172.18.0.2"
+      - "talentics-core.lc:172.18.0.2"
+      - "talentics-site.lc:172.18.0.2"
+      - "talentics-jobs.lc:172.18.0.2"
+    networks:
+      my_network:
+        ipv4_address: 172.18.0.4
