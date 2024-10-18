@@ -18,6 +18,7 @@ services:
     depends_on:
       - php73
       - php8
+      - php83
     networks:
       my_network:
         ipv4_address: 172.18.0.2
@@ -55,3 +56,16 @@ services:
     networks:
       my_network:
         ipv4_address: 172.18.0.4
+
+  php83:
+      build:
+        context: .
+        dockerfile: Dockerfile-php83
+      volumes:
+        - ../:/var/www/html
+      extra_hosts:
+        - "localhost.lc:172.18.0.2"
+        - "vac-dashboard.lc:172.18.0.2"
+      networks:
+        my_network:
+          ipv4_address: 172.18.0.5

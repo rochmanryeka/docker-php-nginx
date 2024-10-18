@@ -28,7 +28,7 @@ RUN docker-php-ext-install opcache \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-install curl \
     session pdo pdo_mysql tokenizer dom zip \
-    xml
+    xml mysqli
 
 RUN docker-php-ext-configure gd --with-jpeg && \
     docker-php-ext-install gd
@@ -36,6 +36,7 @@ RUN docker-php-ext-configure gd --with-jpeg && \
 # PHP Config .ini
 COPY ./config/opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 COPY ./config/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY ./config/php.ini /usr/local/etc/php/
 
 # Copy application files
 COPY . /var/www/html

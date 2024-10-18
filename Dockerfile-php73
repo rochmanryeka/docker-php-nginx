@@ -33,7 +33,7 @@ RUN docker-php-ext-install opcache \
     # Install other extensions
     && docker-php-ext-install curl \
     json session pdo pdo_mysql tokenizer dom zip \
-    xml mbstring
+    xml mbstring mysqli
 
 # Install GD
 RUN docker-php-ext-configure gd \

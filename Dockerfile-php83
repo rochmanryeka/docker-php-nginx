@@ -1,0 +1,53 @@
+# Use the official PHP 8.3 FPM image
+FROM php:8.3-fpm
+
+# Install required packages and dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        make \
+        autoconf \
+        libc-dev \
+        pkg-config \
+        zlib1g-dev \
+        libcurl4-openssl-dev \
+        libjson-c-dev \
+        libssl-dev \
+        libz-dev \
+        libxml2-dev \
+        libzip-dev \
+        libpng-dev \
+        libjpeg-dev \
+        curl \
+        bison \
+        re2c
+
+# Install PHP extensions individually
+RUN docker-php-ext-install opcache && docker-php-ext-enable opcache
+RUN docker-php-ext-install curl
+RUN docker-php-ext-install session
+RUN docker-php-ext-install pdo
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install dom
+RUN docker-php-ext-install zip
+RUN docker-php-ext-install xml
+RUN docker-php-ext-install mysqli
+
+# Configure GD with JPEG support
+RUN docker-php-ext-configure gd --with-jpeg && \
+    docker-php-ext-install gd
+
+# PHP Config .ini
+COPY ./config/opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+COPY ./config/php.ini /usr/local/etc/php/
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install Node.js 22.8.0 and npm 10.9.0
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs=22.8.0-1nodesource1 && \
+    npm install -g npm@10.9.0
+
+# Copy application files
+COPY . /var/www/html
