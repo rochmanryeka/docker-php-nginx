@@ -57,6 +57,23 @@ services:
       my_network:
         ipv4_address: 172.18.0.4
 
+  php82:
+      build:
+        context: .
+        dockerfile: Dockerfile-php82
+      volumes:
+        - ../:/var/www/html
+      extra_hosts:
+        - "localhost.lc:172.18.0.2"
+        - "talentics-app.lc:172.18.0.2"
+        - "talentics-console.lc:172.18.0.2"
+        - "talentics-core.lc:172.18.0.2"
+        - "talentics-site.lc:172.18.0.2"
+        - "talentics-jobs.lc:172.18.0.2"
+      networks:
+        my_network:
+          ipv4_address: 172.18.0.5
+
   php83:
       build:
         context: .
@@ -68,4 +85,4 @@ services:
         - "vac-dashboard.lc:172.18.0.2"
       networks:
         my_network:
-          ipv4_address: 172.18.0.5
+          ipv4_address: 172.18.0.6
